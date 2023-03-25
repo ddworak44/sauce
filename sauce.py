@@ -9,6 +9,7 @@ from PIL import Image
 import pytesseract
 
 # Set up Tweepy and authenticate with your Twitter API credentials
+
 consumer_key = 'UZCAXwQzBuT1Z55HFnzFJBXOy'
 consumer_secret = 'E0KVpqXC4soCy4vHV31MP6Ntmf0aDrCA5eug4WZmkJY4SCCfJW'
 access_token = '752175431185420288-q42lQQoerFVuXPECcorSlrcPiAWlvku'
@@ -18,6 +19,8 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
+
+BOT_USERNAME = "ddforpresident"
 
 # Define a function to extract text from an image using OpenCV and pytesseract
 def extract_text_from_image(image_url):
@@ -114,6 +117,16 @@ def does_exist(username):
 
 
 if __name__ == "__main__":
+
+    # "Consumer Key here", "Consumer Secret here",
+    # "Access Token here", "Access Token Secret here"
+    stream = tweepy.Stream(
+        consumer_key, consumer_secret, access_token, access_token_secret
+    )
+
+    # Filter the stream to listen for replies to your bot's account
+    stream.filter(track=[f"@{BOT_USERNAME}"], is_async=True)
+
     THIS_URL = input("Enter a valid URL: ")
     ids, contents = extract_text_from_image(THIS_URL)
     print("Ids are: ", ids)
