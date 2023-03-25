@@ -12,4 +12,4 @@ Now, all you have to do is reply to the tweet with sauce-bot, and it will look f
 
 # 0.0.1
 
-The first release will simply be to see if we can get all of the dependencies configured. I know twitter is changing its API policies, but we will act is if everything's good to go. 
+The first release will simply be to see if we can get all of the dependencies configured. I know twitter is changing its API policies, but we will act as if everything's good to go. 
