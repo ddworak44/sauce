@@ -53,16 +53,35 @@ def extract_text_from_image(image_url):
     print("Set : ", ID_SET)
 
     print("\n\n *** Attempting to find longest alphanumeric *** \n")
-    for element in ID_SET: 
-        print("E is: ", element)
-        match = re.search(rf"{re.escape(element)}\s*(\w+)", text)
+
+    SEQUENTIAL_TEXT = []
+    for username in ID_SET: 
+
+
+        # pattern = re.compile(rf"{username}\n\n(.+)")
+        # print("Using pattern of: ", pattern)
+        # match = pattern.search(text)
+        # print("Where match is: ", match)
+
+        pattern = re.compile(rf"{username}.*\n(.+)")
+        match = pattern.search(text)
+
         if match:
-            longest_alphanumeric = max(re.findall(r'\w+', match.group(1)), key=len)
-            print(f"The next longest alphanumeric string after {element} is [ {longest_alphanumeric} ]")
+            SEQUENTIAL_TEXT.append(match.group(1))
+            print(f"String after {username}: {match.group(1)}")
+        else:
+            SEQUENTIAL_TEXT.append("")
+            print(f"{username} not found")
 
     print("*** End of to find longest alphanumeric *** \n")
     print("==== End user's ID ==== \n")
-    return ID_SET
+
+    print("****")
+    print("****")
+    print("****")
+    print("****")
+
+    return ID_SET, SEQUENTIAL_TEXT
 
 def search_tweets(username, search_text):
     search_query = f"from:{username} {search_text}"
@@ -76,19 +95,60 @@ def search_tweets(username, search_text):
     else:
         print(f"No tweets found containing '{search_text}' from user {username}")
 
+def does_exist(username):
+    try:
+        user = api.get_user(screen_name=username)
+        # print(f"Account with username '{username}' exists.")
+        return True
+    except tweepy.errors.TweepyException as e:
+        # print(" ** Printing User not Found Code ** ")
+        # print(e)
+        # print(" ** End of User not Found Code ** ")
+        return False
+        # if e.api_code == 50 or e.api_code == 63:
+        #     print(f"Account with username '{username}' does not exist or is suspended.")
+        #     return False
+        # else:
+        #     print("An error occurred:", e)
+        #     return None
+
+
+if __name__ == "__main__":
+    THIS_URL = input("Enter a valid URL: ")
+    ids, contents = extract_text_from_image(THIS_URL)
+    print("Ids are: ", ids)
+    print("Contents are: ", contents)
+
+    index = 0
+    for username in ids: 
+        if does_exist(username):
+            print("Username of ", username, " does exist\n")
+            if contents[index] != "":
+                search_tweets(username, contents[index])
+        else:
+            print(username, "does not exist. They may have changed their username or deactivated their account")
+        
+        index += 1
+        # if (contents[index] == ""):
+        #     continue 
+        # found_it = search_tweets(username, contents[index])
+        # print(found_it)
+        # index += 1
+
+
 
 # Define a function to extract the original tweet URL
-def extract_tweet_url(tweet_text):
-    username_pattern = r'@(\w+)'
-    tweet_id_pattern = r'twitter.com/(\w+)/status/(\d+)'
+# def extract_tweet_url(tweet_text):
+#     username_pattern = r'@(\w+)'
+#     tweet_id_pattern = r'twitter.com/(\w+)/status/(\d+)'
 
-    username = re.search(username_pattern, tweet_text)
-    tweet_id = re.search(tweet_id_pattern, tweet_text)
+#     username = re.search(username_pattern, tweet_text)
+#     tweet_id = re.search(tweet_id_pattern, tweet_text)
 
-    if username and tweet_id:
-        tweet_url = f"https://twitter.com/{username.group(1)}/status/{tweet_id.group(2)}"
-        return tweet_url
-    return None
+#     if username and tweet_id:
+#         tweet_url = f"https://twitter.com/{username.group(1)}/status/{tweet_id.group(2)}"
+#         return tweet_url
+#     return None
 
 # Define a class that extends tweepy.StreamListener to handle incoming mentions
 # class MyStreamListener(tweepy.StreamListener):
@@ -115,7 +175,10 @@ def extract_tweet_url(tweet_text):
 # myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 # myStream.filter(track=['@your_bot_screen_name'])
 
-if __name__ == "__main__":
-    THIS_URL = input("Enter a valid URL: ")
-    results = extract_text_from_image(THIS_URL)
-    print(results)
+
+# for element in ID_SET: 
+#     #     print("E is: ", element)
+#     #     match = re.search(rf"{re.escape(element)}\s*(\w+)", text)
+#     #     if match:
+#     #         longest_alphanumeric = max(re.findall(r'\w+', match.group(1)), key=len)
+#     #         print(f"The next longest alphanumeric string after {element} is [ {longest_alphanumeric} ]")
