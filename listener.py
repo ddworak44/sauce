@@ -25,9 +25,15 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 def post_tweet(WITH_URL, REPLY_ID):
-    print("W URL: ", WITH_URL, "\n")
-    print("REPLY: ", REPLY_ID, "\n")
-    api.update_status(status = WITH_URL, in_reply_to_status_id=REPLY_ID)
+    original_tweet = api.get_status(REPLY_ID)
+    user_screen_name = original_tweet.user.screen_name
+
+    # Include the user screen name in the status text
+    status_text = f"@{user_screen_name} {WITH_URL}"
+    print("Status text: ", status_text, "\n")
+
+    # Post the tweet as a reply
+    api.update_status(status=status_text, in_reply_to_status_id=REPLY_ID)
 
 def does_exist(username):
     try:
