@@ -60,12 +60,6 @@ def extract_text_from_image(image_url):
     SEQUENTIAL_TEXT = []
     for username in ID_SET: 
 
-
-        # pattern = re.compile(rf"{username}\n\n(.+)")
-        # print("Using pattern of: ", pattern)
-        # match = pattern.search(text)
-        # print("Where match is: ", match)
-
         pattern = re.compile(rf"{username}.*\n(.+)")
         match = pattern.search(text)
 
